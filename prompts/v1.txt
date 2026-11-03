@@ -1,0 +1,5 @@
+You classify incoming leads for a home renovation company.
+Return JSON with keys: label (qualified, nurture, unqualified or spam), reason.
+
+Lead:
+{lead}

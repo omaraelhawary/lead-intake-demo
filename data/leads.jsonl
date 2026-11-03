@@ -1,0 +1,60 @@
+{"id":1,"name":"Sarah Mitchell","zip":"78704","budget":"$45,000","timeline":"next month","message":"We own our house in Travis Heights and want a full kitchen remodel: new cabinets, quartz counters, moving the island. Can someone come look this month?","label":"qualified"}
+{"id":2,"name":"David Chen","zip":"78731","budget":"$80k-100k","timeline":"spring","message":"Planning a second-story addition on our home. Architect drawings are done, looking for a contractor to bid.","label":"qualified"}
+{"id":3,"name":"Maria Lopez","zip":"78745","budget":"$25,000","timeline":"ASAP","message":"Our master bathroom has water damage under the tile. Homeowners, need a full gut and redo as soon as possible.","label":"qualified"}
+{"id":4,"name":"James Walker","zip":"78703","budget":"around 60k","timeline":"within 3 months","message":"Looking to open up the wall between kitchen and living room and redo flooring throughout the first floor of our home.","label":"qualified"}
+{"id":5,"name":"Priya Natarajan","zip":"78750","budget":"$15,000","timeline":"January","message":"I own my townhouse and want to convert the garage into a home office with insulation, drywall and a mini split.","label":"qualified"}
+{"id":6,"name":"Tom Becker","zip":"78757","budget":"$35k","timeline":"next 2 months","message":"Basement finishing project. We just bought the house and want a guest suite down there.","label":"qualified"}
+{"id":7,"name":"Angela Ruiz","zip":"78702","budget":"$120,000","timeline":"start in 4 months","message":"Whole-house renovation on a 1950s bungalow we own. Kitchen, two baths, electrical update.","label":"qualified"}
+{"id":8,"name":"Kevin O'Brien","zip":"78748","budget":"$18,000","timeline":"this month","message":"Homeowner here. Want to replace our deck and add a covered patio. Ready to start soon.","label":"qualified"}
+{"id":9,"name":"Linda Park","zip":"78739","budget":"$50,000","timeline":"February","message":"We'd like to remodel two bathrooms in our home, keep the layout but replace everything else.","label":"qualified"}
+{"id":10,"name":"Robert Hayes","zip":"78759","budget":"$70k","timeline":"within 6 months","message":"Adding an ADU in the backyard of our property for my mother. Need design-build help.","label":"qualified"}
+{"id":11,"name":"Emily Foster","zip":"78723","budget":"$12,000","timeline":"next few weeks","message":"I own my condo and want to replace all the flooring with LVP and paint the whole unit.","label":"qualified"}
+{"id":12,"name":"Carlos Mendoza","zip":"78744","budget":"$30k","timeline":"December","message":"Kitchen refresh in the house we own: new counters, backsplash, appliances, lighting.","label":"qualified"}
+{"id":13,"name":"Rachel Green","zip":"78746","budget":"$200k","timeline":"3-4 months","message":"Major renovation of our Westlake home, open floor plan, new primary suite. Please call me.","label":"qualified"}
+{"id":14,"name":"Steve Novak","zip":"78727","budget":"$22,000","timeline":"next month","message":"Owner of a single-family home. Want to enclose our back porch into a sunroom.","label":"qualified"}
+{"id":15,"name":"Hannah Lee","zip":"78741","budget":"$40,000","timeline":"after the holidays, January","message":"We own our house and want to redo the kitchen. Have a Pinterest board ready!","label":"qualified"}
+{"id":16,"name":"Mark Johnson","zip":"78704","budget":"","timeline":"","message":"Thinking about remodeling our kitchen at some point. What does something like that usually cost?","label":"nurture"}
+{"id":17,"name":"Julie Adams","zip":"78731","budget":"not sure yet","timeline":"next year","message":"We own our home and are dreaming about an addition, maybe late next year. Just gathering ideas.","label":"nurture"}
+{"id":18,"name":"Brian Scott","zip":"78745","budget":"","timeline":"","message":"Do you do bathroom remodels? Our hall bath is dated.","label":"nurture"}
+{"id":19,"name":"Nina Patel","zip":"78750","budget":"$30k","timeline":"in about 9 months","message":"Homeowners, want to plan a kitchen remodel for next fall. Can we get on your calendar early?","label":"nurture"}
+{"id":20,"name":"Greg Wilson","zip":"78757","budget":"","timeline":"soon","message":"Need a quote for a few rooms. Please send pricing info.","label":"nurture"}
+{"id":21,"name":"Olivia Brooks","zip":"78702","budget":"depends on the quote","timeline":"flexible","message":"We own our house and are deciding between remodeling and moving. Would like to understand options.","label":"nurture"}
+{"id":22,"name":"Paul Turner","zip":"78748","budget":"","timeline":"","message":"Saw your truck in my neighborhood. Do you do decks?","label":"nurture"}
+{"id":23,"name":"Sophie Martin","zip":"78739","budget":"$15-20k","timeline":"maybe in a year","message":"Our basement is unfinished. We might finish it once our second baby arrives next year.","label":"nurture"}
+{"id":24,"name":"Daniel Kim","zip":"78759","budget":"","timeline":"","message":"Interested in an ADU. How long do permits take in Austin?","label":"nurture"}
+{"id":25,"name":"Laura Bennett","zip":"78723","budget":"unsure","timeline":"next 3 months","message":"I own my home and want to update the bathroom but have no idea what it would cost. Can you give a ballpark?","label":"nurture"}
+{"id":26,"name":"Chris Evans","zip":"78744","budget":"","timeline":"","message":"Please send me your portfolio and a price list.","label":"nurture"}
+{"id":27,"name":"Megan Price","zip":"78746","budget":"$50k+","timeline":"once we close on the house","message":"We're under contract on a home in Westlake, closing in 60 days. Want to plan a renovation for after closing.","label":"nurture"}
+{"id":28,"name":"Andrew Cole","zip":"78727","budget":"","timeline":"in 8-10 months","message":"Saving up for a kitchen remodel in our home. Want to know what to budget for.","label":"nurture"}
+{"id":29,"name":"Grace Liu","zip":"78741","budget":"","timeline":"","message":"Can you help with a full renovation? Call me back.","label":"nurture"}
+{"id":30,"name":"Ethan Ross","zip":"78704","budget":"$40k","timeline":"","message":"Homeowner, interested in a primary bath remodel. Not sure on timing, want to talk first.","label":"nurture"}
+{"id":31,"name":"Jessica Taylor","zip":"78705","budget":"$2,000","timeline":"this week","message":"I rent an apartment near campus and my landlord won't fix the cabinet doors. Can you?","label":"unqualified"}
+{"id":32,"name":"Mike Davis","zip":"76102","budget":"$60,000","timeline":"next month","message":"Kitchen remodel at our home in Fort Worth.","label":"unqualified"}
+{"id":33,"name":"Ashley Moore","zip":"78745","budget":"$300","timeline":"ASAP","message":"Need someone to patch a small hole in my drywall and touch up paint.","label":"unqualified"}
+{"id":34,"name":"Ryan Clark","zip":"78757","budget":"$5,000","timeline":"next month","message":"Want to replace the ceiling fans and two light fixtures in my house.","label":"unqualified"}
+{"id":35,"name":"Kelly White","zip":"78702","budget":"","timeline":"","message":"I'm a renter. Can I hire you to redo the kitchen? My landlord hasn't said yes yet.","label":"unqualified"}
+{"id":36,"name":"Jason Hall","zip":"77002","budget":"$90k","timeline":"spring","message":"Full bathroom and kitchen renovation in our Houston home.","label":"unqualified"}
+{"id":37,"name":"Amanda Young","zip":"78748","budget":"$1,500","timeline":"next week","message":"Need my fence repaired after the storm, 3 panels are down.","label":"unqualified"}
+{"id":38,"name":"Josh King","zip":"78739","budget":"","timeline":"","message":"Are you hiring? I'm a carpenter with 8 years experience looking for work.","label":"unqualified"}
+{"id":39,"name":"Brittany Wright","zip":"78759","budget":"$800","timeline":"soon","message":"Looking for someone to assemble IKEA furniture and mount a TV.","label":"unqualified"}
+{"id":40,"name":"Tyler Green","zip":"78723","budget":"$40k","timeline":"next month","message":"I'm a property manager for a 40-unit commercial office building. Need lobby renovation bids.","label":"unqualified"}
+{"id":41,"name":"Samantha Baker","zip":"78744","budget":"$3,000","timeline":"ASAP","message":"Water heater broke, need a new one installed today.","label":"unqualified"}
+{"id":42,"name":"Nathan Adams","zip":"10001","budget":"$100k","timeline":"3 months","message":"Renovating my apartment in Manhattan, need a GC.","label":"unqualified"}
+{"id":43,"name":"Lauren Nelson","zip":"78746","budget":"","timeline":"","message":"I'm a student writing a paper on the construction industry. Could I interview your owner?","label":"unqualified"}
+{"id":44,"name":"Kyle Carter","zip":"78727","budget":"$500","timeline":"this weekend","message":"Can someone clean my gutters?","label":"unqualified"}
+{"id":45,"name":"Rebecca Mitchell","zip":"78741","budget":"$6,000","timeline":"next month","message":"Want to paint the exterior trim of my house only.","label":"unqualified"}
+{"id":46,"name":"SEO Expert","zip":"","budget":"","timeline":"","message":"Hi, I noticed your website is not ranking on Google page 1. We offer guaranteed SEO for $199/month. Reply YES.","label":"spam"}
+{"id":47,"name":"Crypto Gains","zip":"00000","budget":"","timeline":"","message":"Earn 500% returns with our bitcoin trading bot!!! Click here now","label":"spam"}
+{"id":48,"name":"asdf","zip":"12345","budget":"","timeline":"","message":"asdfasdf test test","label":"spam"}
+{"id":49,"name":"Web Design Agency","zip":"","budget":"","timeline":"","message":"We build websites for contractors. Can we schedule a 15 minute call to show you a redesign mockup?","label":"spam"}
+{"id":50,"name":"Lead Gen Pro","zip":"","budget":"","timeline":"","message":"Want 50 exclusive remodeling leads per month? Pay per lead, no contract. Reply for a free trial.","label":"spam"}
+{"id":51,"name":"John","zip":"","budget":"","timeline":"","message":"http://bit.ly/x8f2k cheap meds online","label":"spam"}
+{"id":52,"name":"Virtual Assistant","zip":"","budget":"","timeline":"","message":"I am a VA from the Philippines offering appointment setting for contractors at $5/hour.","label":"spam"}
+{"id":53,"name":"Test","zip":"","budget":"","timeline":"","message":"Test submission please ignore","label":"spam"}
+{"id":54,"name":"Business Loans","zip":"","budget":"","timeline":"","message":"Your business is pre-approved for $250,000 in funding. No credit check. Apply today.","label":"spam"}
+{"id":55,"name":"Google Business Team","zip":"","budget":"","timeline":"","message":"URGENT: your Google Business Profile will be suspended. Verify now at the link below.","label":"spam"}
+{"id":56,"name":"Pedro Alvarez","zip":"78745","budget":"$35,000","timeline":"el próximo mes","message":"Somos dueños de nuestra casa y queremos remodelar la cocina completa el próximo mes.","label":"qualified"}
+{"id":57,"name":"Karen & Bill Stone","zip":"78731","budget":"","timeline":"","message":"Karen here: we want a new kitchen ASAP, budget about $50k. Bill here: we are NOT spending that, maybe just paint the cabinets this year.","label":"nurture"}
+{"id":58,"name":"Diane Ford","zip":"78704","budget":"","timeline":"","message":"Oh great, another contractor who will ghost me after the estimate. Prove me wrong: we own our home and need the primary bath gutted, around forty grand, starting in January.","label":"qualified"}
+{"id":59,"name":"Victor Huang","zip":"78750","budget":"fifteen thousand","timeline":"within two months","message":"My parents own the house and I'm handling the project for them. They want the guest bath updated for accessibility.","label":"qualified"}
+{"id":60,"name":"Monica Reyes","zip":"78701","budget":"$75,000","timeline":"next month","message":"I'm the landlord of a duplex I own downtown and want to renovate both kitchens between tenants.","label":"qualified"}
