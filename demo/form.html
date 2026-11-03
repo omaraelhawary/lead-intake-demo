@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BrightBuild Renovations: Get a quote</title>
+<style>
+  :root { --ink:#1d2430; --muted:#5b6574; --line:#dfe3ea; --bg:#f6f4ef; --brand:#c4512b; --ok:#1f7a4d; --warn:#a86a00; --bad:#9b2c2c; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }
+  .wrap { max-width:1100px; margin:0 auto; padding:32px 24px; display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  header { max-width:1100px; margin:0 auto; padding:28px 24px 0; }
+  header b { color:var(--brand); }
+  h1 { margin:4px 0 0; font-size:28px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:24px; }
+  label { display:block; font-size:13px; font-weight:600; color:var(--muted); margin:14px 0 6px; }
+  input, textarea { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; font:inherit; }
+  textarea { min-height:110px; resize:vertical; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  button { margin-top:18px; width:100%; padding:12px; border:0; border-radius:8px; background:var(--brand); color:#fff; font:600 16px system-ui; cursor:pointer; }
+  button:disabled { opacity:.6; cursor:wait; }
+  .presets { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+  .presets button { width:auto; margin:0; padding:6px 10px; font-size:13px; background:#eef0f4; color:var(--ink); }
+  .side h2 { margin:0 0 6px; font-size:15px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  .empty { color:var(--muted); }
+  .badge { display:inline-block; padding:4px 12px; border-radius:999px; color:#fff; font-weight:700; text-transform:uppercase; font-size:14px; }
+  .qualified { background:var(--ok); } .nurture { background:var(--warn); } .unqualified, .needs_review { background:#555; } .spam { background:var(--bad); }
+  .reason { margin:12px 0; font-size:17px; }
+  .draft { white-space:pre-wrap; background:#f8f9fb; border:1px solid var(--line); border-radius:8px; padding:14px; font-size:14px; }
+  .spinner { display:inline-block; width:14px; height:14px; border:2px solid #ccc; border-top-color:var(--brand); border-radius:50%; animation:spin 1s linear infinite; vertical-align:-2px; margin-right:8px; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  a { color:var(--brand); font-weight:600; }
+  @media (max-width:800px) { .wrap { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div><b>BrightBuild Renovations</b> · Austin, TX (fictional demo company)</div>
+  <h1>Tell us about your project</h1>
+</header>
+<div class="wrap">
+  <form class="card" id="f">
+    <div class="presets" id="presets"></div>
+    <div class="row">
+      <div><label for="name">Name</label><input id="name" required></div>
+      <div><label for="email">Email</label><input id="email" type="email" required></div>
+    </div>
+    <div class="row">
+      <div><label for="phone">Phone</label><input id="phone"></div>
+      <div><label for="zip">ZIP code</label><input id="zip"></div>
+    </div>
+    <div class="row">
+      <div><label for="budget">Budget (optional)</label><input id="budget"></div>
+      <div><label for="timeline">Timeline (optional)</label><input id="timeline"></div>
+    </div>
+    <label for="message">Your project</label>
+    <textarea id="message" required></textarea>
+    <button id="go" type="submit">Send request</button>
+  </form>
+  <section class="card side" id="out">
+    <h2>What happened behind the scenes</h2>
+    <p class="empty">Submit the form. The lead goes to an n8n workflow that classifies it with an AI model, writes it to HubSpot, and drafts the follow-up email.</p>
+  </section>
+</div>
+<script>
+const WEBHOOK = 'http://localhost:5678/webhook/lead-intake';
+// Open with ?portal=<your HubSpot portal id>&region=eu1 (or na1) to get a link to the created contact.
+const params = new URLSearchParams(location.search);
+const HUBSPOT = params.get('portal') ? `https://app-${params.get('region') || 'na1'}.hubspot.com/contacts/${params.get('portal')}/record/0-1/` : null;
+const PRESETS = {
+  'Kitchen remodel': { name:'Laura Bennett', email:'laura.bennett@example.com', phone:'512-555-0187', zip:'78731', budget:'$60,000', timeline:'within 2 months', message:'We own our home in Tarrytown and want to gut and redo the kitchen: new layout, custom cabinets, and a bigger island. When could someone come out?' },
+  'Price question': { name:'James Ortiz', email:'james.ortiz@example.com', phone:'', zip:'78745', budget:'', timeline:'', message:'Roughly how much does a bathroom remodel cost? Just starting to think about it.' },
+  'SEO pitch': { name:'Top Rank Agency', email:'hello@toprank-agency.example.com', phone:'', zip:'10001', budget:'', timeline:'', message:'We help contractors get 50+ leads a month with SEO. Can we send you a free audit this week?' },
+};
+const $ = id => document.getElementById(id);
+const fields = ['name','email','phone','zip','budget','timeline','message'];
+if (new URLSearchParams(location.search).has('presets')) for (const [label, data] of Object.entries(PRESETS)) {
+  const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
+  b.onclick = () => fields.forEach(k => $(k).value = data[k] || '');
+  $('presets').appendChild(b);
+}
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+$('f').onsubmit = async e => {
+  e.preventDefault();
+  const lead = Object.fromEntries(fields.map(k => [k, $(k).value.trim()]));
+  $('go').disabled = true;
+  $('out').innerHTML = '<h2>What happened behind the scenes</h2><p><span class="spinner"></span>Classifying the lead and updating HubSpot…</p>';
+  try {
+    const r = await fetch(WEBHOOK, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(lead) });
+    const d = await r.json();
+    if (!r.ok || !d.label) throw new Error(d.message || 'Workflow error');
+    let html = `<h2>What happened behind the scenes</h2><span class="badge ${esc(d.label)}">${esc(d.label)}</span><p class="reason">${esc(d.reason)}</p>`;
+    if (d.missing_info?.length) html += `<p><b>Missing:</b> ${esc(d.missing_info.join(', '))}</p>`;
+    html += d.hubspot_contact_id
+      ? `<p>✓ Saved to HubSpot with a note explaining the label.${HUBSPOT ? ` <a href="${HUBSPOT}${esc(d.hubspot_contact_id)}" target="_blank">Open the contact</a>` : ''}</p>`
+      : `<p>✓ Spam: nothing written to the CRM, no reply drafted.</p>`;
+    if (d.followup_draft) html += `<h2 style="margin-top:18px">Follow-up email draft</h2><div class="draft"><b>${esc(d.followup_draft.subject)}</b>\n\n${esc(d.followup_draft.body)}</div>`;
+    $('out').innerHTML = html;
+  } catch (err) {
+    $('out').innerHTML = `<h2>What happened behind the scenes</h2><p>Something went wrong: ${esc(err.message)}</p>`;
+  } finally { $('go').disabled = false; }
+};
+</script>
+</body>
+</html>

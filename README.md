@@ -24,12 +24,18 @@ open report.html
 `--sleep 4` keeps you under free-tier rate limits. `--provider mock` runs offline with a keyword heuristic, only to check the pipeline works; its numbers mean nothing.
 
 ## The live flow (n8n + HubSpot)
-1. `npx n8n` and open http://localhost:5678
-2. Webhook node (POST) receiving: name, email, phone, zip, budget, timeline, message
-3. HTTP Request node to Gemini with the text of `prompts/v2.txt` (same prompt as the eval, so the report describes what runs in production)
-4. Code node: parse the JSON, map label to HubSpot lifecycle stage (qualified = salesqualifiedlead, nurture = lead, unqualified = other, spam = stop)
-5. HubSpot node (private-app token): create or update the contact, add a note with the AI's reason
-6. IF qualified: send an email or Slack alert to the owner
+Watch it run (62 seconds): [media/lead-intake-demo.mp4](media/lead-intake-demo.mp4)
+
+`n8n/lead-intake.workflow.json` is the workflow from the video. Import it into n8n (Workflows, Import from file).
+
+1. Webhook (POST `/webhook/lead-intake`) receives name, email, phone, zip, budget, timeline, message.
+2. A Code node fills in `prompts/v2.txt`, the same prompt the eval scores, so the report describes what runs in production.
+3. The model (qwen3:8b through Ollama in the video) returns the label, the missing info and a one-sentence reason as JSON.
+4. Spam stops here: nothing is written to the CRM.
+5. HubSpot: create or update the contact by email (qualified becomes a sales qualified lead), then attach a note with the label and the reason.
+6. A follow-up email is drafted, not sent: a site-visit request for qualified leads, a question about the missing details for nurture leads.
+
+The HubSpot service key is read from the `HUBSPOT_TOKEN` environment variable, so it never sits inside the workflow. `demo/form.html` is the contact form used in the video; serve it locally and it posts to the webhook.
 
 ## Results (qwen3:8b running locally via Ollama, temperature 0)
 

@@ -1,3 +1,8 @@
 .env
 runs/
 __pycache__/
+
+recording/
+demo/portfolio/
+demo/report.html
+demo/*.mp4

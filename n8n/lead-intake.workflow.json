@@ -1,0 +1,299 @@
+{
+  "name": "Lead intake: classify, HubSpot, follow-up",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "Lead form webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "lead-intake-demo",
+      "id": "node-1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const PROMPT = \"You classify website leads for BrightBuild Renovations, a home renovation contractor in Austin, Texas.\\n\\nBusiness rules:\\n- Service area: Austin ZIP codes 78701-78759 only.\\n- QUALIFIED: the person owns the property (or acts for the owner, or is a landlord renovating a property they own), the property is in the service area, the job is a renovation worth $10,000 or more, and they want to start within 6 months. Budgets written in words count (\\\"forty grand\\\" = $40,000). Messages in any language count.\\n- NURTURE: in the service area and a real renovation interest, but budget or timeline is missing, unclear, more than 6 months away, or the decision makers disagree. Price-list or \\\"how much does it cost\\\" questions are nurture.\\n- UNQUALIFIED: outside the service area, renters without owner approval, small handyman jobs under $10,000, emergency repairs, commercial buildings, job seekers, students, or anything that is not a residential renovation.\\n- SPAM: sales pitches to the company (SEO, websites, leads, loans, VAs), scams, phishing, gibberish, or test submissions.\\n\\nTone does not change the label: a rude or sarcastic message that meets the qualified rules is qualified.\\n\\nReturn only JSON, no prose:\\n{\\\"label\\\": \\\"qualified|nurture|unqualified|spam\\\", \\\"missing_info\\\": [\\\"...\\\"], \\\"reason\\\": \\\"one sentence\\\"}\\n\\nLead:\\n{lead}\\n\";\nconst lead = $json.body || $json;\nconst keys = ['name', 'zip', 'budget', 'timeline', 'message'];\nconst text = keys.map(k => `${k}: ${lead[k] ?? ''}`).join('\\n');\nreturn [{ json: { lead, prompt: PROMPT.replace('{lead}', text) } }];"
+      },
+      "name": "Build prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "node-2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://host.docker.internal:11434/api/generate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'qwen3:8b', prompt: $json.prompt, stream: false, format: 'json', think: false, options: { temperature: 0 } }) }}",
+        "options": {
+          "timeout": 120000
+        }
+      },
+      "name": "Classify (Ollama)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "node-3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const LABELS = ['qualified', 'nurture', 'unqualified', 'spam'];\nconst lead = $('Build prompt').first().json.lead;\nlet out = {};\ntry { out = JSON.parse($json.response); } catch (e) { out = {}; }\nconst label = LABELS.includes(out.label) ? out.label : 'needs_review';\nconst reason = out.reason || 'Model returned no usable answer; a person should review this lead.';\nconst missing = Array.isArray(out.missing_info) ? out.missing_info : [];\nconst [first, ...rest] = String(lead.name || '').trim().split(/\\s+/);\nconst stage = { qualified: 'salesqualifiedlead' }[label] || 'lead';\nconst status = { qualified: 'OPEN', nurture: 'NEW', unqualified: 'UNQUALIFIED', needs_review: 'NEW' }[label];\nreturn [{ json: { lead, label, reason, missing_info: missing,\n  contact: { email: lead.email, firstname: first || '', lastname: rest.join(' '),\n             phone: lead.phone || '', zip: lead.zip || '', lifecyclestage: stage, hs_lead_status: status } } }];"
+      },
+      "name": "Parse result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "node-4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "spam",
+              "leftValue": "={{ $json.label }}",
+              "rightValue": "spam",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "name": "Is spam?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        0
+      ],
+      "id": "node-5"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ label: 'spam', reason: $json.reason, hubspot_contact_id: null, followup_draft: null }) }}",
+        "options": {}
+      },
+      "name": "Respond: spam ignored",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1100,
+        -160
+      ],
+      "id": "node-6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts/batch/upsert",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.HUBSPOT_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ inputs: [{ idProperty: 'email', id: $json.contact.email, properties: $json.contact }] }) }}",
+        "options": {}
+      },
+      "name": "HubSpot upsert contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        80
+      ],
+      "id": "node-7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/notes",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.HUBSPOT_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ properties: { hs_timestamp: new Date().toISOString(), hs_note_body: `AI lead intake: ${$('Parse result').first().json.label.toUpperCase()}. ${$('Parse result').first().json.reason}` + ($('Parse result').first().json.missing_info.length ? ` Missing: ${$('Parse result').first().json.missing_info.join(', ')}.` : '') + `\\n\\nOriginal message: ${$('Parse result').first().json.lead.message}` }, associations: [{ to: { id: $json.results[0].id }, types: [{ associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 202 }] }] }) }}",
+        "options": {}
+      },
+      "name": "HubSpot add note",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        80
+      ],
+      "id": "node-8"
+    },
+    {
+      "parameters": {
+        "jsCode": "const r = $('Parse result').first().json;\nconst first = r.contact.firstname || 'there';\nlet draft = null;\nif (r.label === 'qualified') {\n  draft = { subject: 'Your renovation project: picking a site-visit time',\n    body: `Hi ${first},\\n\\nThanks for reaching out about your project. It sounds like a great fit for us. Could you share two or three times this week or next that work for a site visit? It takes about an hour, and we'll give you a written estimate within three business days.\\n\\nBrightBuild Renovations` };\n} else if (r.label === 'nurture') {\n  const ask = r.missing_info.length ? r.missing_info.join(', ') : 'your budget range and when you hope to start';\n  draft = { subject: 'A couple of questions about your project',\n    body: `Hi ${first},\\n\\nThanks for getting in touch. To point you in the right direction, could you tell us a bit more: ${ask}?\\n\\nBrightBuild Renovations` };\n}\nreturn [{ json: { label: r.label, reason: r.reason, missing_info: r.missing_info,\n  hubspot_contact_id: $('HubSpot upsert contact').first().json.results?.[0]?.id ?? null,\n  followup_draft: draft } }];"
+      },
+      "name": "Draft follow-up",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1540,
+        80
+      ],
+      "id": "node-9"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "name": "Respond: result",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1760,
+        80
+      ],
+      "id": "node-10"
+    }
+  ],
+  "connections": {
+    "Lead form webhook": {
+      "main": [
+        [
+          {
+            "node": "Build prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build prompt": {
+      "main": [
+        [
+          {
+            "node": "Classify (Ollama)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classify (Ollama)": {
+      "main": [
+        [
+          {
+            "node": "Parse result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse result": {
+      "main": [
+        [
+          {
+            "node": "Is spam?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot upsert contact": {
+      "main": [
+        [
+          {
+            "node": "HubSpot add note",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HubSpot add note": {
+      "main": [
+        [
+          {
+            "node": "Draft follow-up",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft follow-up": {
+      "main": [
+        [
+          {
+            "node": "Respond: result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is spam?": {
+      "main": [
+        [
+          {
+            "node": "Respond: spam ignored",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HubSpot upsert contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "active": false,
+  "id": "leadIntakeDemo01"
+}
